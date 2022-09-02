@@ -20,35 +20,35 @@ import static javax.persistence.GenerationType.SEQUENCE;
 @Table(name = "menu_item")
 public class MenuItem {
 
-   @Id
-   @SequenceGenerator(
-           name = "menuItem_sequence",
-           sequenceName = "menuItem_sequence",
-           allocationSize = 1
+    @Id
+    @SequenceGenerator(
+            name = "menuItem_sequence",
+            sequenceName = "menuItem_sequence",
+            allocationSize = 1
 
-   )
-   @GeneratedValue(
-           strategy = SEQUENCE,
-           generator = "menuItem_sequence"
-   )
-   @Column(
-           name = "id",
-           nullable = false,
-           updatable = false
-   )
+    )
+    @GeneratedValue(
+            strategy = SEQUENCE,
+            generator = "menuItem_sequence"
+    )
+    @Column(
+            name = "id",
+            nullable = false,
+            updatable = false
+    )
     private Long id;
 
-   @Column(
-           name = "name",
-           nullable = false
-   )
+    @Column(
+            name = "name",
+            nullable = false
+    )
     private String name;
 
-   @Column(
-           name = "image",
-           columnDefinition = "mediumblob"
-   )
-   @Lob
+    @Column(
+            name = "image",
+            columnDefinition = "mediumblob"
+    )
+    @Lob
     private byte[] image;
 
     @OneToMany
@@ -95,8 +95,8 @@ public class MenuItem {
     private Thickness thickness;
 
     private MenuItem(String name, byte[] image, List<Ingredient> ingredients, Size size,
-                    double weight, double price, Category category, Subcategory subcategory,
-                    Thickness thickness) {
+                     double weight, double price, Category category, Subcategory subcategory,
+                     Thickness thickness) {
         this.name = name;
         this.image = image;
         this.ingredients = ingredients;
