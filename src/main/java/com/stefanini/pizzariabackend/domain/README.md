@@ -1,1 +1,1 @@
-![Database Screenshot](../../../../../../../target/doc/images/database.png)
+![Database Screenshot](../../../../../resources/images/database.png)
