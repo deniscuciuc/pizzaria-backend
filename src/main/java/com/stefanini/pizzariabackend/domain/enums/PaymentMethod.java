@@ -1,4 +1,6 @@
 package com.stefanini.pizzariabackend.domain.enums;
 
-public class Order {
+public enum PaymentMethod {
+    CASH,
+    CARD
 }

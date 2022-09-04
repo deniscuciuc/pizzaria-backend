@@ -4,11 +4,14 @@ import com.stefanini.pizzariabackend.domain.enums.Category;
 import com.stefanini.pizzariabackend.domain.enums.Size;
 import com.stefanini.pizzariabackend.domain.enums.Subcategory;
 import com.stefanini.pizzariabackend.domain.enums.Thickness;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static javax.persistence.GenerationType.SEQUENCE;
 
@@ -17,7 +20,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 @Setter
 @ToString
 @Entity(name = "MenuItem")
-@Table(name = "menu_item")
+@Table(name = "Menu_Item")
 public class MenuItem {
 
     @Id
@@ -51,29 +54,17 @@ public class MenuItem {
     @Lob
     private byte[] image;
 
-    @OneToMany
-    private List<Ingredient> ingredients;
-
-
     @Column(
-            name = "size",
+            name = "ingredients",
             nullable = false
     )
-    @Enumerated(EnumType.STRING)
-    private Size size;
-
+    private String ingredients;
 
     @Column(
-            name = "weight"
+            name = "sizesAndPrices"
     )
-    private double weight;
-
-
-    @Column(
-            name = "price",
-            nullable = false
-    )
-    private double price;
+    @ElementCollection
+    private Map<Size, Double> sizesAndPrices;
 
     @Column(
             name = "category",
@@ -94,45 +85,44 @@ public class MenuItem {
     @Enumerated(EnumType.STRING)
     private Thickness thickness;
 
-    private MenuItem(String name, byte[] image, List<Ingredient> ingredients, Size size,
-                     double weight, double price, Category category, Subcategory subcategory,
-                     Thickness thickness) {
+    @OneToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
+
+    private MenuItem(String name, byte[] image, String ingredients,
+                     Map<Size, Double> sizesAndPrices, Category category, Subcategory subcategory,
+                     Thickness thickness, Order order) {
         this.name = name;
         this.image = image;
         this.ingredients = ingredients;
-        this.size = size;
-        this.weight = weight;
-        this.price = price;
+        this.sizesAndPrices = sizesAndPrices;
         this.category = category;
         this.subcategory = subcategory;
         this.thickness = thickness;
+        this.order = order;
     }
 
-    private MenuItem(String name, byte[] image, List<Ingredient> ingredients, Size size,
-                     double weight, double price, Category category, Subcategory subcategory) {
+    private MenuItem(String name, byte[] image, String ingredients, Map<Size, Double> sizesAndPrices,
+                     Category category, Thickness thickness) {
         this.name = name;
         this.image = image;
         this.ingredients = ingredients;
-        this.size = size;
-        this.weight = weight;
-        this.price = price;
+        this.sizesAndPrices = sizesAndPrices;
         this.category = category;
-        this.subcategory = subcategory;
+        this.thickness = thickness;
     }
 
-    public static MenuItem createWithAllArgs(String name, byte[] image, List<Ingredient> ingredients,
-                                             Size size, double weight, double price, Category category,
-                                             Subcategory subcategory, Thickness thickness) {
-        return new MenuItem(
-                name, image, ingredients, size, weight, price, category, subcategory, thickness
-        );
-    }
+    public static MenuItem createPizzaWithDefaultValues(String name, byte[] image, String ingredients,
+                                                        double priceForSmallSize, double priceForMediumSize,
+                                                        double priceForLargeSize, Thickness thickness) {
 
-    public static MenuItem createWithOutThickness(String name, byte[] image, List<Ingredient> ingredients,
-                                                  Size size, double weight, double price, Category category,
-                                                  Subcategory subcategory) {
+        Map<Size, Double> sizesAndPrices = new HashMap<>();
+        sizesAndPrices.put(Size.SMALL, priceForSmallSize);
+        sizesAndPrices.put(Size.MEDIUM, priceForMediumSize);
+        sizesAndPrices.put(Size.LARGE, priceForLargeSize);
+
         return new MenuItem(
-                name, image, ingredients, size, weight, price, category, subcategory
+                name, image, ingredients, sizesAndPrices, Category.PIZZA, thickness
         );
     }
 }
