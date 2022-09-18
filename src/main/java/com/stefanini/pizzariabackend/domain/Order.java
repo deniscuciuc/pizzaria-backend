@@ -10,6 +10,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static javax.persistence.GenerationType.SEQUENCE;
 
@@ -53,9 +55,26 @@ public class Order {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    // TODO: add user, many to many,
-    // TODO: numberOfCutlery, payment method,
-    // TODO: totalCost
 
+    @OneToMany(
+            mappedBy = "order",
+            cascade = CascadeType.ALL
+    )
+    private List<MenuItem> menuItems = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Column(
+            name = "number_of_cutlery",
+            nullable = false
+    )
+    private Integer numberOfCutlery;
+
+    @Column(
+            name = "total_cost",
+            nullable = false
+    )
+    private Double totalCost;
 }

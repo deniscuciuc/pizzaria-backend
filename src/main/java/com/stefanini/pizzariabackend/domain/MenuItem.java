@@ -61,7 +61,7 @@ public class MenuItem {
     private String ingredients;
 
     @Column(
-            name = "sizesAndPrices"
+            name = "sizes_and_prices"
     )
     @ElementCollection
     private Map<Size, Double> sizesAndPrices;
@@ -85,8 +85,10 @@ public class MenuItem {
     @Enumerated(EnumType.STRING)
     private Thickness thickness;
 
-    @OneToOne
-    @JoinColumn(name = "order_id")
+    @ManyToOne
+    @JoinColumn(
+            name = "order_id"
+    )
     private Order order;
 
     private MenuItem(String name, byte[] image, String ingredients,
@@ -112,17 +114,142 @@ public class MenuItem {
         this.thickness = thickness;
     }
 
-    public static MenuItem createPizzaWithDefaultValues(String name, byte[] image, String ingredients,
-                                                        double priceForSmallSize, double priceForMediumSize,
-                                                        double priceForLargeSize, Thickness thickness) {
+    private MenuItem(String name, byte[] image, String ingredients, Map<Size, Double> sizesAndPrices,
+                     Category category) {
+        this.name = name;
+        this.image = image;
+        this.ingredients = ingredients;
+        this.sizesAndPrices = sizesAndPrices;
+        this.category = category;
+    }
 
-        Map<Size, Double> sizesAndPrices = new HashMap<>();
-        sizesAndPrices.put(Size.SMALL, priceForSmallSize);
-        sizesAndPrices.put(Size.MEDIUM, priceForMediumSize);
-        sizesAndPrices.put(Size.LARGE, priceForLargeSize);
+    private MenuItem(String name, byte[] image, String ingredients, Map<Size, Double> sizesAndPrices,
+                     Category category, Subcategory subcategory) {
+        this.name = name;
+        this.image = image;
+        this.ingredients = ingredients;
+        this.sizesAndPrices = sizesAndPrices;
+        this.category = category;
+        this.subcategory = subcategory;
+    }
+
+    public static MenuItem createPizzaWithDefaultValues(String name, byte[] image, String ingredients,
+                                                        double smallSizePrice, double mediumSizePrice,
+                                                        double largeSizePrice, Thickness thickness) {
+
+        Map<Size, Double> sizesAndPrices = getMapOfSizesAndPricesByPricesForEachSize(
+                smallSizePrice, mediumSizePrice, largeSizePrice
+        );
 
         return new MenuItem(
                 name, image, ingredients, sizesAndPrices, Category.PIZZA, thickness
         );
+    }
+
+    public static MenuItem createBreakfastWithDefaultCategory(String name, byte[] image, String ingredients,
+                                                              double smallSizePrice, double mediumSizePrice,
+                                                              double largeSizePrice) {
+        Map<Size, Double> sizesAndPrices = getMapOfSizesAndPricesByPricesForEachSize(
+                smallSizePrice, mediumSizePrice, largeSizePrice
+        );
+
+        return new MenuItem(
+                name, image, ingredients, sizesAndPrices, Category.BREAKFAST
+        );
+    }
+
+    public static MenuItem createSnackWithDefaultCategory(String name, byte[] image, String ingredients,
+                                                          double smallSizePrice, double mediumSizePrice,
+                                                          double largeSizePrice) {
+        Map<Size, Double> sizesAndPrices = getMapOfSizesAndPricesByPricesForEachSize(
+                smallSizePrice, mediumSizePrice, largeSizePrice
+        );
+
+        return new MenuItem(
+                name, image, ingredients, sizesAndPrices, Category.SNACKS
+        );
+    }
+
+    public static MenuItem createSaladWithDefaultCategory(String name, byte[] image, String ingredients,
+                                                          double smallSizePrice, double mediumSizePrice,
+                                                          double largeSizePrice) {
+        Map<Size, Double> sizesAndPrices = getMapOfSizesAndPricesByPricesForEachSize(
+                smallSizePrice, mediumSizePrice, largeSizePrice
+        );
+
+        return new MenuItem(
+                name, image, ingredients, sizesAndPrices, Category.SALADS
+        );
+    }
+
+    public static MenuItem createSoupWithDefaultCategory(String name, byte[] image, String ingredients,
+                                                         double smallSizePrice, double mediumSizePrice,
+                                                         double largeSizePrice, Subcategory subcategory) {
+        Map<Size, Double> sizesAndPrices = getMapOfSizesAndPricesByPricesForEachSize(
+                smallSizePrice, mediumSizePrice, largeSizePrice
+        );
+
+        return new MenuItem(
+                name, image, ingredients, sizesAndPrices, Category.SOUPS, subcategory
+        );
+    }
+
+    public static MenuItem createMainDishWithDefaultCategory(String name, byte[] image, String ingredients,
+                                                             double smallSizePrice, double mediumSizePrice,
+                                                             double largeSizePrice) {
+        Map<Size, Double> sizesAndPrices = getMapOfSizesAndPricesByPricesForEachSize(
+                smallSizePrice, mediumSizePrice, largeSizePrice
+        );
+
+        return new MenuItem(
+                name, image, ingredients, sizesAndPrices, Category.MAIN_DISHES
+        );
+    }
+
+    public static MenuItem createDessertWithDefaultCategory(String name, byte[] image, String ingredients,
+                                                            double smallSizePrice, double mediumSizePrice,
+                                                            double largeSizePrice, Subcategory subcategory) {
+        Map<Size, Double> sizesAndPrices = getMapOfSizesAndPricesByPricesForEachSize(
+                smallSizePrice, mediumSizePrice, largeSizePrice
+        );
+
+        return new MenuItem(
+                name, image, ingredients, sizesAndPrices, Category.DESSERT, subcategory
+        );
+    }
+
+    public static MenuItem createBeveragesWithDefaultCategory(String name, byte[] image, String ingredients,
+                                                            double smallSizePrice, double mediumSizePrice,
+                                                            double largeSizePrice, Subcategory subcategory) {
+        Map<Size, Double> sizesAndPrices = getMapOfSizesAndPricesByPricesForEachSize(
+                smallSizePrice, mediumSizePrice, largeSizePrice
+        );
+
+        return new MenuItem(
+                name, image, ingredients, sizesAndPrices, Category.BEVERAGES, subcategory
+        );
+    }
+
+    public static MenuItem createSupplementsWithDefaultCategory(String name, byte[] image, String ingredients,
+                                                             double smallSizePrice, double mediumSizePrice,
+                                                             double largeSizePrice) {
+        Map<Size, Double> sizesAndPrices = getMapOfSizesAndPricesByPricesForEachSize(
+                smallSizePrice, mediumSizePrice, largeSizePrice
+        );
+
+        return new MenuItem(
+                name, image, ingredients, sizesAndPrices, Category.SUPPLEMENTS
+        );
+    }
+
+    private static Map<Size, Double> getMapOfSizesAndPricesByPricesForEachSize(double smallSizePrice,
+                                                                               double mediumSizePrice,
+                                                                               double largeSizePrice) {
+        Map<Size, Double> sizesAndPrices = new HashMap<>();
+        sizesAndPrices.put(Size.SMALL, smallSizePrice);
+        sizesAndPrices.put(Size.MEDIUM, mediumSizePrice);
+        sizesAndPrices.put(Size.LARGE, largeSizePrice);
+
+        return sizesAndPrices;
     }
 }

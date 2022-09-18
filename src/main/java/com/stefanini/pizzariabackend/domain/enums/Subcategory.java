@@ -12,5 +12,4 @@ public enum Subcategory {
     COFFEE,
     JUICE,
     MILKSHAKE
-
 }

@@ -7,10 +7,9 @@ import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
-import java.sql.Date;
-
-import static javax.persistence.GenerationType.*;
+import static javax.persistence.GenerationType.SEQUENCE;
 
 @NoArgsConstructor
 @Getter
@@ -50,7 +49,7 @@ public class History {
             updatable = false
     )
     @CreationTimestamp
-    private Date performedAt;
+    private LocalDate performedAt;
 
     @ManyToOne
     @JoinColumn(
@@ -59,13 +58,13 @@ public class History {
     )
     private User user;
 
-    private History(String actionName, Date performedAt, User user) {
+    private History(String actionName, LocalDate performedAt, User user) {
         this.actionName = actionName;
         this.performedAt = performedAt;
         this.user = user;
     }
 
-    public static History createWithAllArgs(String actionName, Date performedAt, User user) {
-        return new History(actionName, performedAt, user);
+    public static History createWithInstantLocalDate(String actionName, User user) {
+        return new History(actionName, LocalDate.now(), user);
     }
 }
