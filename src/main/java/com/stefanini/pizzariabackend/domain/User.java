@@ -1,15 +1,20 @@
 package com.stefanini.pizzariabackend.domain;
 
+import com.stefanini.pizzariabackend.domain.enums.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import static javax.persistence.GenerationType.*;
+import static javax.persistence.GenerationType.SEQUENCE;
 
 @NoArgsConstructor
 @Getter
@@ -68,16 +73,39 @@ public class User {
     )
     private String password;
 
+    @CreationTimestamp
+    @Column(
+            name = "created_at"
+    )
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(
+            name = "last_updated"
+    )
+    private LocalDateTime lastUpdated;
+
     @OneToMany(mappedBy = "user")
     private List<History> history;
 
-    private User(String email, String nickname, String password) {
-        this.email = email;
-        this.nickname = nickname;
-        this.password = password;
-    }
+    @OneToOne(cascade = CascadeType.ALL)
+    private Profile profile;
 
-    public static User createWithAllArgs(String email, String nickname, String password) {
-        return new User(email, nickname, password);
-    }
+    @ElementCollection(
+            targetClass = Role.class,
+            fetch = FetchType.EAGER
+    )
+    @CollectionTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(
+                    name = "user_id"
+            )
+    )
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles = new HashSet<>();
+
+    @Column(
+            name = "is_confirmed_by_email"
+    )
+    private boolean isConfirmedByEmail;
 }

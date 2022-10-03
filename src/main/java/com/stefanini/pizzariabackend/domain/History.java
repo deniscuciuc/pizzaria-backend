@@ -37,14 +37,17 @@ public class History {
     private Long Id;
 
     @Column(
-            name = "actionName",
+            name = "order",
             nullable = false,
             updatable = false
     )
     private String actionName;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private Order order;
+
     @Column(
-            name = "performedAt",
+            name = "performed_at",
             nullable = false,
             updatable = false
     )

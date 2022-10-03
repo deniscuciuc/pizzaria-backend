@@ -47,11 +47,10 @@ public class MenuItem {
     )
     private String name;
 
-    @Column(
-            name = "image",
-            columnDefinition = "mediumblob"
-    )
     @Lob
+    @Column(
+            name = "image"
+    )
     private byte[] image;
 
     @Column(

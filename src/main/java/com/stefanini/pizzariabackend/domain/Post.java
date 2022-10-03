@@ -35,13 +35,6 @@ public class Post {
     private Long id;
 
     @Column(
-            name = "image",
-            columnDefinition = "mediumblob"
-    )
-    @Lob
-    private byte[] image;
-
-    @Column(
             name = "title",
             length = 500,
             nullable = false
@@ -66,4 +59,10 @@ public class Post {
             name = "user-id"
     )
     private User author;
+
+    @Lob
+    @Column(
+            name = "image"
+    )
+    private byte[] image;
 }
