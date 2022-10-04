@@ -10,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -86,10 +87,20 @@ public class User {
     private LocalDateTime lastUpdated;
 
     @OneToMany(mappedBy = "user")
-    private List<History> history;
+    private List<History> history = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL)
     private Profile profile;
+
+    @OneToMany(mappedBy = "user")
+    private List<Review> reviews = new ArrayList<>();
+
+    @UpdateTimestamp
+    @Column(
+            name = "last_review_wrote_at"
+    )
+    private LocalDateTime lastReviewWroteAt;
+
 
     @ElementCollection(
             targetClass = Role.class,

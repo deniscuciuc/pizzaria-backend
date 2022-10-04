@@ -25,14 +25,14 @@ public class MenuItem {
 
     @Id
     @SequenceGenerator(
-            name = "menuItem_sequence",
-            sequenceName = "menuItem_sequence",
+            name = "menu_item_sequence",
+            sequenceName = "menu_item_sequence",
             allocationSize = 1
 
     )
     @GeneratedValue(
             strategy = SEQUENCE,
-            generator = "menuItem_sequence"
+            generator = "menu_item_sequence"
     )
     @Column(
             name = "id",
