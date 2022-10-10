@@ -19,6 +19,8 @@ public interface PostService {
      */
     Post savePost(Post post);
 
+    Post updatePost(Long id, Post newPost);
+
     /**
      * Finds all posts.
      *

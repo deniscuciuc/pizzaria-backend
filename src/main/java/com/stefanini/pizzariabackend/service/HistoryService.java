@@ -25,12 +25,4 @@ public interface HistoryService {
      * @return all histories or empty list
      */
     List<History> findAllHistories();
-
-    /**
-     * Deletes history by its id.
-     *
-     * @param id of history item to be deleted
-     * @return id of delete history
-     */
-    Long deleteHistoryById(Long id);
 }

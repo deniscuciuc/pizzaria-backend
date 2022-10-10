@@ -3,14 +3,13 @@ package com.stefanini.pizzariabackend.controller;
 import com.stefanini.pizzariabackend.domain.Order;
 import com.stefanini.pizzariabackend.service.OrderService;
 import com.stefanini.pizzariabackend.service.impl.OrderServiceImpl;
-import org.springframework.dao.EmptyResultDataAccessException;
+import com.stefanini.pizzariabackend.service.impl.exception.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.ACCEPTED;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/api/order/")
@@ -23,6 +22,7 @@ public class OrderController {
     }
 
     @PostMapping("save")
+    @ResponseStatus(CREATED)
     public Order saveOrder(@RequestBody Order order) {
         return orderService.saveOrder(order);
     }
@@ -38,10 +38,10 @@ public class OrderController {
             return ResponseEntity
                     .status(ACCEPTED)
                     .body(orderService.deleteOrderById(id));
-        } catch (EmptyResultDataAccessException exception) {
+        } catch (NotFoundException exception) {
             return ResponseEntity
-                    .status(INTERNAL_SERVER_ERROR)
-                    .body("Order with such id not found");
+                    .status(NOT_FOUND)
+                    .body(exception.getMessage());
         }
     }
 }

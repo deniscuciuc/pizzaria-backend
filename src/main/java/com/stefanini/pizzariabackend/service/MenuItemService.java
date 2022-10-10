@@ -1,6 +1,7 @@
 package com.stefanini.pizzariabackend.service;
 
 import com.stefanini.pizzariabackend.domain.MenuItem;
+import com.stefanini.pizzariabackend.service.impl.exception.NotFoundException;
 
 import java.util.List;
 
@@ -18,6 +19,15 @@ public interface MenuItemService {
      * @return saved menu item
      */
     MenuItem saveMenuItem(MenuItem menuItem);
+
+    /**
+     * Updates menu item.
+     *
+     * @param id of old menu item
+     * @param newMenuItem data to be set to old menu item and saved
+     * @return updated menu item
+     */
+    MenuItem updateMenuItemById(Long id, MenuItem newMenuItem);
 
     /**
      * Finds all menu items.

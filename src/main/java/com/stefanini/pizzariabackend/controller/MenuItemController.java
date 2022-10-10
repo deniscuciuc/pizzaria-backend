@@ -3,14 +3,13 @@ package com.stefanini.pizzariabackend.controller;
 import com.stefanini.pizzariabackend.domain.MenuItem;
 import com.stefanini.pizzariabackend.service.MenuItemService;
 import com.stefanini.pizzariabackend.service.impl.MenuItemServiceImpl;
-import org.springframework.dao.EmptyResultDataAccessException;
+import com.stefanini.pizzariabackend.service.impl.exception.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.ACCEPTED;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/api/menu-item/")
@@ -23,8 +22,25 @@ public class MenuItemController {
     }
 
     @PostMapping("save")
+    @ResponseStatus(CREATED)
     public MenuItem saveMenuItem(@RequestBody MenuItem menuItem) {
         return menuItemService.saveMenuItem(menuItem);
+    }
+
+    @PutMapping("update/{id}")
+    public ResponseEntity<?> updateMenuItem(
+            @PathVariable Long id,
+            @RequestBody MenuItem newMenuItem
+    ) {
+        try {
+            return ResponseEntity
+                    .status(ACCEPTED)
+                    .body(menuItemService.updateMenuItemById(id, newMenuItem));
+        } catch (NotFoundException exception) {
+            return ResponseEntity
+                    .status(NOT_FOUND)
+                    .body(exception.getMessage());
+        }
     }
 
     @GetMapping("findAll")
@@ -38,10 +54,10 @@ public class MenuItemController {
             return ResponseEntity
                     .status(ACCEPTED)
                     .body(menuItemService.deleteMenuItemById(id));
-        } catch (EmptyResultDataAccessException exception) {
+        } catch (NotFoundException exception) {
             return ResponseEntity
-                    .status(INTERNAL_SERVER_ERROR)
-                    .body("Menu item with such id not found");
+                    .status(NOT_FOUND)
+                    .body(exception.getMessage());
         }
     }
 }

@@ -3,10 +3,13 @@ package com.stefanini.pizzariabackend.service.impl;
 import com.stefanini.pizzariabackend.domain.Post;
 import com.stefanini.pizzariabackend.repo.PostRepository;
 import com.stefanini.pizzariabackend.service.PostService;
+import com.stefanini.pizzariabackend.service.impl.exception.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class PostServiceImpl implements PostService {
 
@@ -22,13 +25,37 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public Post updatePost(Long id, Post newPost) {
+        verifyIdIfExistAndIfNotThrowException(id);
+        Post oldPost = postRepository.findById(id).get();
+        updatePostFields(oldPost, newPost);
+        return postRepository.save(oldPost);
+    }
+
+    @Override
     public List<Post> findAllPosts() {
         return postRepository.findAll();
     }
 
     @Override
     public Long deletePostById(Long id) {
+        verifyIdIfExistAndIfNotThrowException(id);
         postRepository.deleteById(id);
         return id;
+    }
+
+    private void verifyIdIfExistAndIfNotThrowException(Long id) throws NotFoundException {
+        boolean doesMenuItemExist = postRepository.existsById(id);
+        if (!doesMenuItemExist) {
+            log.error("Post with such id not found");
+            throw new NotFoundException("Post with such id not found");
+        }
+    }
+
+    private void updatePostFields(Post oldPost, Post newPost) {
+        oldPost.setTitle(newPost.getTitle());
+        oldPost.setSummary(newPost.getSummary());
+        oldPost.setText(newPost.getText());
+        oldPost.setImage(newPost.getImage());
     }
 }

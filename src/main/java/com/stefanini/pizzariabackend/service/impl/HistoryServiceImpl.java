@@ -25,10 +25,4 @@ public class HistoryServiceImpl implements HistoryService {
     public List<History> findAllHistories() {
         return historyRepository.findAll();
     }
-
-    @Override
-    public Long deleteHistoryById(Long id) {
-        historyRepository.deleteById(id);
-        return id;
-    }
 }

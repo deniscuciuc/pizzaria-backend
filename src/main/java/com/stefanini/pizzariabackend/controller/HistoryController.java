@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.ACCEPTED;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/api/history/")
@@ -23,6 +22,7 @@ public class HistoryController {
     }
 
     @PostMapping("save")
+    @ResponseStatus(CREATED)
     public History saveHistory(@RequestBody History history) {
         return historyService.saveHistory(history);
     }
@@ -30,19 +30,5 @@ public class HistoryController {
     @GetMapping("findAll")
     public List<History> findAllHistories() {
         return historyService.findAllHistories();
-    }
-
-
-    @DeleteMapping("delete/{id}")
-    public ResponseEntity<?> deleteHistoryById(@PathVariable Long id) {
-        try {
-            return ResponseEntity
-                    .status(ACCEPTED)
-                    .body(historyService.deleteHistoryById(id));
-        } catch (EmptyResultDataAccessException exception) {
-            return ResponseEntity
-                    .status(INTERNAL_SERVER_ERROR)
-                    .body("History with such id not found");
-        }
     }
 }
