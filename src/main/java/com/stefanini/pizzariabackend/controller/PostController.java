@@ -14,7 +14,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
-@RequestMapping("/api/post/")
+@RequestMapping("/api/v1/posts")
 public class PostController {
 
     private final PostService postService;
@@ -23,13 +23,13 @@ public class PostController {
         this.postService = postServiceImpl;
     }
 
-    @PostMapping("save")
+    @PostMapping
     @ResponseStatus(CREATED)
-    public Post savePost(@RequestBody Post post) {
+    public Post createPost(@RequestBody Post post) {
         return postService.savePost(post);
     }
 
-    @PutMapping("update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updatePost(
             @PathVariable Long id,
             @RequestBody Post newPost
@@ -40,26 +40,26 @@ public class PostController {
                     .body(postService.updatePost(id, newPost));
         } catch (NotFoundException exception) {
             return ResponseEntity
-                    .status(NOT_FOUND)
+                    .status(exception.getResponseStatus())
                     .body(exception.getMessage());
         }
     }
 
-    @GetMapping("findAll")
+    @GetMapping
     public List<Post> findAllPosts() {
         return postService.findAllPosts();
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePostById(@PathVariable Long id) {
         try {
             return ResponseEntity
                     .status(HttpStatus.ACCEPTED)
                     .body(postService.deletePostById(id));
-        } catch (EmptyResultDataAccessException exception) {
+        } catch (NotFoundException exception) {
             return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Post with such id not found");
+                    .status(exception.getResponseStatus())
+                    .body(exception.getMessage());
         }
     }
 }

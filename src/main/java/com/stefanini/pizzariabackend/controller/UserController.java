@@ -13,7 +13,7 @@ import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @RestController
-@RequestMapping("/api/user/")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     private final UserService userService;
@@ -22,17 +22,17 @@ public class UserController {
         this.userService = userServiceImpl;
     }
 
-    @PostMapping("save")
+    @PostMapping
     public User saveUser(@RequestBody User user) {
         return userService.saveUser(user);
     }
 
-    @GetMapping("findAll")
+    @GetMapping
     public List<User> findAllUsers() {
         return userService.findAllUsers();
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity deleteUserById(@PathVariable Long id) {
         try {
             return ResponseEntity

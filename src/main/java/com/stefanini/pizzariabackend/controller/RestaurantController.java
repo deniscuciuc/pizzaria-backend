@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.ACCEPTED;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
-@RequestMapping("/api/restaurant/")
+@RequestMapping("/api/v1/restaurants")
 public class RestaurantController {
 
     private final RestaurantService restaurantService;
@@ -23,17 +22,18 @@ public class RestaurantController {
     }
 
 
-    @PostMapping("save")
-    public Restaurant saveRestaurant(@RequestBody Restaurant restaurant) {
+    @PostMapping
+    @ResponseStatus(CREATED)
+    public Restaurant createRestaurant(@RequestBody Restaurant restaurant) {
         return restaurantService.saveRestaurant(restaurant);
     }
 
-    @GetMapping("findAll")
+    @GetMapping
     public List<Restaurant> findAllRestaurants() {
         return restaurantService.findAllRestaurants();
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteRestaurantById(@PathVariable Long id) {
         try {
             return ResponseEntity

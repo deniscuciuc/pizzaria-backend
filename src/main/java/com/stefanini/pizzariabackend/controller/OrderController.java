@@ -12,7 +12,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
-@RequestMapping("/api/order/")
+@RequestMapping("/api/v1/orders")
 public class OrderController {
 
     private final OrderService orderService;
@@ -21,18 +21,18 @@ public class OrderController {
         this.orderService = orderServiceImpl;
     }
 
-    @PostMapping("save")
+    @PostMapping
     @ResponseStatus(CREATED)
     public Order saveOrder(@RequestBody Order order) {
         return orderService.saveOrder(order);
     }
 
-    @GetMapping("findAll")
+    @GetMapping
     public List<Order> findAllOrders() {
         return orderService.findAllOrders();
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteOrderById(@PathVariable Long id) {
         try {
             return ResponseEntity
@@ -40,7 +40,7 @@ public class OrderController {
                     .body(orderService.deleteOrderById(id));
         } catch (NotFoundException exception) {
             return ResponseEntity
-                    .status(NOT_FOUND)
+                    .status(exception.getResponseStatus())
                     .body(exception.getMessage());
         }
     }

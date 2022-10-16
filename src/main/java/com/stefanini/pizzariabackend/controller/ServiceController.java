@@ -13,7 +13,7 @@ import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @RestController
-@RequestMapping("/api/service/")
+@RequestMapping("/api/v1/services")
 public class ServiceController {
 
     private final ServiceService serviceService;
@@ -22,17 +22,17 @@ public class ServiceController {
         this.serviceService = serviceServiceImpl;
     }
 
-    @PostMapping("save")
+    @PostMapping
     public Service saveService(@RequestBody Service service) {
         return serviceService.saveService(service);
     }
 
-    @GetMapping("findAll")
+    @GetMapping
     public List<Service> findAllServices() {
         return serviceService.findAllServices();
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteServiceById(@PathVariable Long id) {
         try {
             return ResponseEntity

@@ -22,9 +22,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/sign-in", "/api/sign-up").permitAll()
                 .antMatchers("/api/token/refresh").permitAll()
-                .antMatchers("/api/menu-item/**", "/api/history/**", "/api/order/**").permitAll()
-                .antMatchers("/api/post/**", "/api/restaurant/**", "/api/service/**").permitAll()
-                .antMatchers("/api/user/**").permitAll()
+                .antMatchers("/api/menu-items/**", "/api/histories/**", "/api/orders/**").permitAll()
+                .antMatchers("/api/posts/**", "/api/restaurants/**", "/api/services/**").permitAll()
+                .antMatchers("/api/users/**").permitAll()
                 .and()
                 .authorizeRequests().anyRequest().authenticated();
     }

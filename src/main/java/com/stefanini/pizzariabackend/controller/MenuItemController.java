@@ -12,7 +12,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
-@RequestMapping("/api/menu-item/")
+@RequestMapping("/api/v1/menu-items")
 public class MenuItemController {
 
     private final MenuItemService menuItemService;
@@ -21,13 +21,13 @@ public class MenuItemController {
         this.menuItemService = menuItemServiceImpl;
     }
 
-    @PostMapping("save")
+    @PostMapping
     @ResponseStatus(CREATED)
     public MenuItem saveMenuItem(@RequestBody MenuItem menuItem) {
         return menuItemService.saveMenuItem(menuItem);
     }
 
-    @PutMapping("update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateMenuItem(
             @PathVariable Long id,
             @RequestBody MenuItem newMenuItem
@@ -38,17 +38,17 @@ public class MenuItemController {
                     .body(menuItemService.updateMenuItemById(id, newMenuItem));
         } catch (NotFoundException exception) {
             return ResponseEntity
-                    .status(NOT_FOUND)
+                    .status(exception.getResponseStatus())
                     .body(exception.getMessage());
         }
     }
 
-    @GetMapping("findAll")
+    @GetMapping
     public List<MenuItem> findAllMenuItems() {
         return menuItemService.findAllMenuItems();
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteMenuItem(@PathVariable Long id) {
         try {
             return ResponseEntity
@@ -56,7 +56,7 @@ public class MenuItemController {
                     .body(menuItemService.deleteMenuItemById(id));
         } catch (NotFoundException exception) {
             return ResponseEntity
-                    .status(NOT_FOUND)
+                    .status(exception.getResponseStatus())
                     .body(exception.getMessage());
         }
     }

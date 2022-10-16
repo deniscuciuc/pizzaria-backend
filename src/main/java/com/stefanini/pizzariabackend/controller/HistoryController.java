@@ -12,7 +12,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
-@RequestMapping("/api/history/")
+@RequestMapping("/api/v1/histories")
 public class HistoryController {
 
     private final HistoryService historyService;
@@ -21,13 +21,13 @@ public class HistoryController {
         this.historyService = historyServiceImpl;
     }
 
-    @PostMapping("save")
+    @PostMapping
     @ResponseStatus(CREATED)
     public History saveHistory(@RequestBody History history) {
         return historyService.saveHistory(history);
     }
 
-    @GetMapping("findAll")
+    @GetMapping
     public List<History> findAllHistories() {
         return historyService.findAllHistories();
     }
