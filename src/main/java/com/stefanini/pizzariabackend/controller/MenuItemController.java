@@ -23,7 +23,7 @@ public class MenuItemController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public MenuItem saveMenuItem(@RequestBody MenuItem menuItem) {
+    public MenuItem createMenuItem(@RequestBody MenuItem menuItem) {
         return menuItemService.saveMenuItem(menuItem);
     }
 
@@ -44,7 +44,7 @@ public class MenuItemController {
     }
 
     @GetMapping
-    public List<MenuItem> findAllMenuItems() {
+    public List<MenuItem> getAllMenuItems() {
         return menuItemService.findAllMenuItems();
     }
 
@@ -54,6 +54,29 @@ public class MenuItemController {
             return ResponseEntity
                     .status(ACCEPTED)
                     .body(menuItemService.deleteMenuItemById(id));
+        } catch (NotFoundException exception) {
+            return ResponseEntity
+                    .status(exception.getResponseStatus())
+                    .body(exception.getMessage());
+        }
+    }
+
+    @GetMapping("/pagination/sorting/{category}/{subcategory}/{current-page}/{page-size}/{sort-by}/{sort-order}")
+    public ResponseEntity<?> getPaginatedAndSortedMenuItems(
+            @PathVariable String category,
+            @PathVariable String subcategory,
+            @PathVariable("current-page") Long currentPage,
+            @PathVariable("page-size") Long pageSize,
+            @PathVariable("sort-by") String sortBy,
+            @PathVariable("sort-order") String sortOrder
+    ) {
+        try {
+            return ResponseEntity
+                    .status(ACCEPTED)
+                    .body(menuItemService.getPaginatedAndSortedMenuItems(
+                            category, subcategory, currentPage,
+                            pageSize, sortBy, sortOrder
+                    ));
         } catch (NotFoundException exception) {
             return ResponseEntity
                     .status(exception.getResponseStatus())

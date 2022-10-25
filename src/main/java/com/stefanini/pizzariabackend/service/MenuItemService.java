@@ -1,7 +1,6 @@
 package com.stefanini.pizzariabackend.service;
 
 import com.stefanini.pizzariabackend.domain.MenuItem;
-import com.stefanini.pizzariabackend.service.impl.exception.NotFoundException;
 
 import java.util.List;
 
@@ -43,4 +42,7 @@ public interface MenuItemService {
      * @return id of deleted menu item
      */
     Long deleteMenuItemById(Long id);
+
+    List<MenuItem> getPaginatedAndSortedMenuItems(String category, String subcategory, Long currentPage,
+                                                  Long pageSize, String sortBy, String sortOrder);
 }

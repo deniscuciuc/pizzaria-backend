@@ -4,12 +4,11 @@ import com.stefanini.pizzariabackend.domain.MenuItem;
 import com.stefanini.pizzariabackend.repo.MenuItemRepository;
 import com.stefanini.pizzariabackend.service.MenuItemService;
 import com.stefanini.pizzariabackend.service.impl.exception.NotFoundException;
+import com.stefanini.pizzariabackend.service.impl.helper.ValuesChecker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -45,6 +44,13 @@ public class MenuItemServiceImpl implements MenuItemService {
         verifyIdIfExistAndIfNotThrowException(id);
         menuItemRepository.deleteById(id);
         return id;
+    }
+
+    @Override
+    public List<MenuItem> getPaginatedAndSortedMenuItems(String category, String subcategory, Long currentPage, Long pageSize, String sortBy, String sortOrder) {
+        ValuesChecker.verifyPaginatedAndSortedValuesAndIfBadChangeThemToDefaultOrReturnException(
+                category, subcategory, currentPage, pageSize, sortBy, sortOrder, MenuItem.class.getClass());
+        return null;
     }
 
     private void verifyIdIfExistAndIfNotThrowException(Long id) throws NotFoundException {
