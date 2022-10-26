@@ -3,6 +3,8 @@ package com.stefanini.pizzariabackend.controller;
 import com.stefanini.pizzariabackend.domain.Service;
 import com.stefanini.pizzariabackend.service.ServiceService;
 import com.stefanini.pizzariabackend.service.impl.ServiceServiceImpl;
+import com.stefanini.pizzariabackend.service.impl.exception.InvalidIdException;
+import com.stefanini.pizzariabackend.service.impl.exception.NotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,7 @@ public class ServiceController {
     }
 
     @PostMapping
-    public Service saveService(@RequestBody Service service) {
+    public Service createService(@RequestBody Service service) {
         return serviceService.saveService(service);
     }
 
@@ -38,10 +40,14 @@ public class ServiceController {
             return ResponseEntity
                     .status(ACCEPTED)
                     .body(serviceService.deleteServiceById(id));
-        } catch (EmptyResultDataAccessException exception) {
+        } catch (InvalidIdException exception) {
             return ResponseEntity
-                    .status(INTERNAL_SERVER_ERROR)
-                    .body("Service with such id not found");
+                    .status(exception.getResponseStatus())
+                    .body(exception.getMessage());
+        } catch (NotFoundException exception) {
+            return ResponseEntity
+                    .status(exception.getResponseStatus())
+                    .body(exception.getMessage());
         }
     }
 }

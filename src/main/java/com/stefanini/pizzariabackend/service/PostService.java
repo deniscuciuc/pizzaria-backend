@@ -35,4 +35,6 @@ public interface PostService {
      * @return id of deleted post
      */
     Long deletePostById(Long id);
+
+    List<Post> getPaginatedPosts(int currentPage, int pageSize);
 }

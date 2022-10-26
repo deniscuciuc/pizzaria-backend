@@ -3,6 +3,8 @@ package com.stefanini.pizzariabackend.controller;
 import com.stefanini.pizzariabackend.domain.Order;
 import com.stefanini.pizzariabackend.service.OrderService;
 import com.stefanini.pizzariabackend.service.impl.OrderServiceImpl;
+import com.stefanini.pizzariabackend.service.impl.exception.InvalidIdException;
+import com.stefanini.pizzariabackend.service.impl.exception.InvalidPageValuesException;
 import com.stefanini.pizzariabackend.service.impl.exception.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +25,12 @@ public class OrderController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public Order saveOrder(@RequestBody Order order) {
+    public Order createOrder(@RequestBody Order order) {
         return orderService.saveOrder(order);
     }
 
     @GetMapping
-    public List<Order> findAllOrders() {
+    public List<Order> getAllOrders() {
         return orderService.findAllOrders();
     }
 
@@ -38,7 +40,27 @@ public class OrderController {
             return ResponseEntity
                     .status(ACCEPTED)
                     .body(orderService.deleteOrderById(id));
+        } catch (InvalidIdException exception) {
+            return ResponseEntity
+                    .status(exception.getResponseStatus())
+                    .body(exception.getMessage());
         } catch (NotFoundException exception) {
+            return ResponseEntity
+                    .status(exception.getResponseStatus())
+                    .body(exception.getMessage());
+        }
+    }
+
+    @GetMapping("/pagination/{current-page}/{page-size}")
+    public ResponseEntity<?> getPaginatedOrders(
+            @PathVariable("current-page") int currentPage,
+            @PathVariable("page-size") int pageSize
+    ) {
+        try {
+            return ResponseEntity
+                    .status(ACCEPTED)
+                    .body(orderService.getPaginatedOrders(currentPage, pageSize));
+        } catch (InvalidPageValuesException exception) {
             return ResponseEntity
                     .status(exception.getResponseStatus())
                     .body(exception.getMessage());

@@ -3,6 +3,7 @@ package com.stefanini.pizzariabackend.controller;
 import com.stefanini.pizzariabackend.domain.Post;
 import com.stefanini.pizzariabackend.service.PostService;
 import com.stefanini.pizzariabackend.service.impl.PostServiceImpl;
+import com.stefanini.pizzariabackend.service.impl.exception.InvalidPageValuesException;
 import com.stefanini.pizzariabackend.service.impl.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -46,7 +48,7 @@ public class PostController {
     }
 
     @GetMapping
-    public List<Post> findAllPosts() {
+    public List<Post> getAllPosts() {
         return postService.findAllPosts();
     }
 
@@ -54,9 +56,25 @@ public class PostController {
     public ResponseEntity<?> deletePostById(@PathVariable Long id) {
         try {
             return ResponseEntity
-                    .status(HttpStatus.ACCEPTED)
+                    .status(ACCEPTED)
                     .body(postService.deletePostById(id));
         } catch (NotFoundException exception) {
+            return ResponseEntity
+                    .status(exception.getResponseStatus())
+                    .body(exception.getMessage());
+        }
+    }
+
+    @GetMapping("/pagination/{current-page}/{page-size}")
+    public ResponseEntity<?> getPaginatedPosts(
+            @PathVariable("current-page") int currentPage,
+            @PathVariable("page-size") int pageSize
+    ) {
+        try {
+            return ResponseEntity
+                    .status(ACCEPTED)
+                    .body(postService.getPaginatedPosts(currentPage, pageSize));
+        } catch (InvalidPageValuesException exception) {
             return ResponseEntity
                     .status(exception.getResponseStatus())
                     .body(exception.getMessage());

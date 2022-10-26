@@ -3,6 +3,8 @@ package com.stefanini.pizzariabackend.controller;
 import com.stefanini.pizzariabackend.domain.User;
 import com.stefanini.pizzariabackend.service.UserService;
 import com.stefanini.pizzariabackend.service.impl.UserServiceImpl;
+import com.stefanini.pizzariabackend.service.impl.exception.InvalidIdException;
+import com.stefanini.pizzariabackend.service.impl.exception.NotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,25 +25,29 @@ public class UserController {
     }
 
     @PostMapping
-    public User saveUser(@RequestBody User user) {
+    public User createUser(@RequestBody User user) {
         return userService.saveUser(user);
     }
 
     @GetMapping
-    public List<User> findAllUsers() {
+    public List<User> getAllUsers() {
         return userService.findAllUsers();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteUserById(@PathVariable Long id) {
+    public ResponseEntity deleteUser(@PathVariable Long id) {
         try {
             return ResponseEntity
                     .status(ACCEPTED)
                     .body(userService.deleteUserById(id));
-        } catch (EmptyResultDataAccessException exception) {
+        } catch (InvalidIdException exception) {
             return ResponseEntity
-                    .status(INTERNAL_SERVER_ERROR)
-                    .body("User with such id not found");
+                    .status(exception.getResponseStatus())
+                    .body(exception.getMessage());
+        } catch (NotFoundException exception) {
+            return ResponseEntity
+                    .status(exception.getResponseStatus())
+                    .body(exception.getMessage());
         }
     }
 }

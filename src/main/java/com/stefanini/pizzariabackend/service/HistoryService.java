@@ -25,4 +25,6 @@ public interface HistoryService {
      * @return all histories or empty list
      */
     List<History> findAllHistories();
+
+    List<History> getPaginatedHistories(Long userId, int currentPage, int pageSize);
 }

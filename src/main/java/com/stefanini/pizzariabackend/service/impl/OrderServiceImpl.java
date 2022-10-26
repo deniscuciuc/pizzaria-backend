@@ -4,7 +4,11 @@ import com.stefanini.pizzariabackend.domain.Order;
 import com.stefanini.pizzariabackend.repo.OrderRepository;
 import com.stefanini.pizzariabackend.service.OrderService;
 import com.stefanini.pizzariabackend.service.impl.exception.NotFoundException;
+import com.stefanini.pizzariabackend.service.impl.helper.ValuesChecker;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,12 +36,23 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Long deleteOrderById(Long id) {
-        verifyIdIfExistAndIfNotThrowException(id);
+        ValuesChecker.verifyIdAndIfInvalidThrowException(id);
+        verifyIfOrderExistsById(id);
         orderRepository.deleteById(id);
         return id;
     }
 
-    private void verifyIdIfExistAndIfNotThrowException(Long id) {
+    @Override
+    public List<Order> getPaginatedOrders(int currentPage, int pageSize) {
+        ValuesChecker.verifyPaginatingValuesAndThrowExceptionIfInvalidValues(currentPage, pageSize);
+
+        Pageable paging = PageRequest.of(currentPage, pageSize);
+        Page<Order> pagedResult = orderRepository.findAll(paging);
+
+        return pagedResult.getContent();
+    }
+
+    private void verifyIfOrderExistsById(Long id) throws NotFoundException {
         boolean doesOrderExist = orderRepository.existsById(id);
         if (!doesOrderExist) {
             log.error("Order with such id not found");

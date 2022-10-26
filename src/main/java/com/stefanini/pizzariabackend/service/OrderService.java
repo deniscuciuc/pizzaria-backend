@@ -33,4 +33,6 @@ public interface OrderService {
      * @return id of deleted order
      */
     Long deleteOrderById(Long id);
+
+    List<Order> getPaginatedOrders(int currentPage, int pageSize);
 }

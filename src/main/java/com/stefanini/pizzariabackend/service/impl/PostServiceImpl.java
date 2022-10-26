@@ -4,7 +4,11 @@ import com.stefanini.pizzariabackend.domain.Post;
 import com.stefanini.pizzariabackend.repo.PostRepository;
 import com.stefanini.pizzariabackend.service.PostService;
 import com.stefanini.pizzariabackend.service.impl.exception.NotFoundException;
+import com.stefanini.pizzariabackend.service.impl.helper.ValuesChecker;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,6 +46,16 @@ public class PostServiceImpl implements PostService {
         verifyIdIfExistAndIfNotThrowException(id);
         postRepository.deleteById(id);
         return id;
+    }
+
+    @Override
+    public List<Post> getPaginatedPosts(int currentPage, int pageSize) {
+        ValuesChecker.verifyPaginatingValuesAndThrowExceptionIfInvalidValues(currentPage, pageSize);
+
+        Pageable paging = PageRequest.of(currentPage, pageSize);
+        Page<Post> pagedResult = postRepository.findAll(paging);
+
+        return pagedResult.getContent();
     }
 
     private void verifyIdIfExistAndIfNotThrowException(Long id) throws NotFoundException {

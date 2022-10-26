@@ -3,6 +3,9 @@ package com.stefanini.pizzariabackend.controller;
 import com.stefanini.pizzariabackend.domain.Restaurant;
 import com.stefanini.pizzariabackend.service.RestaurantService;
 import com.stefanini.pizzariabackend.service.impl.RestaurantServiceImpl;
+import com.stefanini.pizzariabackend.service.impl.exception.InvalidIdException;
+import com.stefanini.pizzariabackend.service.impl.exception.NotFoundException;
+import com.sun.xml.bind.v2.schemagen.xmlschema.NoFixedFacet;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,20 +32,24 @@ public class RestaurantController {
     }
 
     @GetMapping
-    public List<Restaurant> findAllRestaurants() {
+    public List<Restaurant> getAllRestaurants() {
         return restaurantService.findAllRestaurants();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteRestaurantById(@PathVariable Long id) {
+    public ResponseEntity<?> deleteRestaurant(@PathVariable Long id) {
         try {
             return ResponseEntity
                     .status(ACCEPTED)
                     .body(restaurantService.deleteRestaurantById(id));
-        } catch (EmptyResultDataAccessException exception) {
+        } catch (InvalidIdException exception) {
             return ResponseEntity
-                    .status(INTERNAL_SERVER_ERROR)
-                    .body("Restaurant with such id not found");
+                    .status(exception.getResponseStatus())
+                    .body(exception.getMessage());
+        } catch (NotFoundException exception) {
+            return ResponseEntity
+                    .status(exception.getResponseStatus())
+                    .body(exception.getMessage());
         }
     }
 }

@@ -3,6 +3,8 @@ package com.stefanini.pizzariabackend.controller;
 import com.stefanini.pizzariabackend.domain.MenuItem;
 import com.stefanini.pizzariabackend.service.MenuItemService;
 import com.stefanini.pizzariabackend.service.impl.MenuItemServiceImpl;
+import com.stefanini.pizzariabackend.service.impl.exception.InvalidIdException;
+import com.stefanini.pizzariabackend.service.impl.exception.InvalidPageValuesException;
 import com.stefanini.pizzariabackend.service.impl.exception.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +38,10 @@ public class MenuItemController {
             return ResponseEntity
                     .status(ACCEPTED)
                     .body(menuItemService.updateMenuItemById(id, newMenuItem));
+        } catch (InvalidIdException exception) {
+            return ResponseEntity
+                    .status(exception.getResponseStatus())
+                    .body(exception.getMessage());
         } catch (NotFoundException exception) {
             return ResponseEntity
                     .status(exception.getResponseStatus())
@@ -54,6 +60,10 @@ public class MenuItemController {
             return ResponseEntity
                     .status(ACCEPTED)
                     .body(menuItemService.deleteMenuItemById(id));
+        } catch (InvalidIdException exception) {
+            return ResponseEntity
+                    .status(exception.getResponseStatus())
+                    .body(exception.getMessage());
         } catch (NotFoundException exception) {
             return ResponseEntity
                     .status(exception.getResponseStatus())
@@ -61,22 +71,21 @@ public class MenuItemController {
         }
     }
 
-    @GetMapping("/pagination/sorting/{category}/{subcategory}/{current-page}/{page-size}/{sort-by}/{sort-order}")
-    public ResponseEntity<?> getPaginatedAndSortedMenuItems(
+    @GetMapping("/pagination/{category}/{subcategory}/{current-page}/{page-size}")
+    public ResponseEntity<?> getPaginatedMenuItems(
             @PathVariable String category,
             @PathVariable String subcategory,
-            @PathVariable("current-page") Long currentPage,
-            @PathVariable("page-size") Long pageSize,
-            @PathVariable("sort-by") String sortBy,
-            @PathVariable("sort-order") String sortOrder
+            @PathVariable("current-page") int currentPage,
+            @PathVariable("page-size") int pageSize
     ) {
         try {
             return ResponseEntity
                     .status(ACCEPTED)
-                    .body(menuItemService.getPaginatedAndSortedMenuItems(
-                            category, subcategory, currentPage,
-                            pageSize, sortBy, sortOrder
-                    ));
+                    .body(menuItemService.getPaginatedMenuItems(category, subcategory, currentPage, pageSize));
+        } catch (InvalidPageValuesException exception) {
+            return ResponseEntity
+                    .status(exception.getResponseStatus())
+                    .body(exception.getMessage());
         } catch (NotFoundException exception) {
             return ResponseEntity
                     .status(exception.getResponseStatus())

@@ -43,6 +43,5 @@ public interface MenuItemService {
      */
     Long deleteMenuItemById(Long id);
 
-    List<MenuItem> getPaginatedAndSortedMenuItems(String category, String subcategory, Long currentPage,
-                                                  Long pageSize, String sortBy, String sortOrder);
+    List<MenuItem> getPaginatedMenuItems(String category, String subcategory, int currentPage, int pageSize);
 }
