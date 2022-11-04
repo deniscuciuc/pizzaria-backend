@@ -34,7 +34,7 @@ public class History {
             nullable = false,
             updatable = false
     )
-    private Long Id;
+    private Long id;
 
     @Column(
             name = "order",
@@ -61,13 +61,14 @@ public class History {
     )
     private User user;
 
-    private History(String actionName, LocalDate performedAt, User user) {
+    public History(String actionName, LocalDate performedAt) {
         this.actionName = actionName;
         this.performedAt = performedAt;
-        this.user = user;
     }
 
-    public static History createWithInstantLocalDate(String actionName, User user) {
-        return new History(actionName, LocalDate.now(), user);
+    public History(Long id, String actionName, LocalDate performedAt) {
+        this.id = id;
+        this.actionName = actionName;
+        this.performedAt = performedAt;
     }
 }

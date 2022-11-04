@@ -3,15 +3,13 @@ package com.stefanini.pizzariabackend.controller;
 import com.stefanini.pizzariabackend.domain.Post;
 import com.stefanini.pizzariabackend.service.PostService;
 import com.stefanini.pizzariabackend.service.impl.PostServiceImpl;
-import com.stefanini.pizzariabackend.service.impl.exception.InvalidPageValuesException;
+import com.stefanini.pizzariabackend.service.impl.exception.InvalidPageValueException;
 import com.stefanini.pizzariabackend.service.impl.exception.NotFoundException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -74,7 +72,7 @@ public class PostController {
             return ResponseEntity
                     .status(ACCEPTED)
                     .body(postService.getPaginatedPosts(currentPage, pageSize));
-        } catch (InvalidPageValuesException exception) {
+        } catch (InvalidPageValueException exception) {
             return ResponseEntity
                     .status(exception.getResponseStatus())
                     .body(exception.getMessage());

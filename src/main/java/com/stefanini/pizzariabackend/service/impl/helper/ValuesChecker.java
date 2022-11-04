@@ -4,7 +4,7 @@ import com.stefanini.pizzariabackend.domain.enums.Category;
 import com.stefanini.pizzariabackend.domain.enums.Subcategory;
 import com.stefanini.pizzariabackend.service.impl.exception.EnumNotFoundException;
 import com.stefanini.pizzariabackend.service.impl.exception.InvalidIdException;
-import com.stefanini.pizzariabackend.service.impl.exception.InvalidPageValuesException;
+import com.stefanini.pizzariabackend.service.impl.exception.InvalidPageValueException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -34,12 +34,7 @@ public class ValuesChecker {
     }
 
     private static void verifyCategoryIfExists(String category) throws EnumNotFoundException {
-        Category foundCategory = Arrays.stream(Category.values())
-                .filter(categoryEnum -> category.toUpperCase().equals(categoryEnum.toString()))
-                .findAny()
-                .orElse(null);
-
-        if (foundCategory == null) {
+        if (!Category.contains(category)) {
             log.error("Category " + category + " not found");
             throw new EnumNotFoundException("Category " + category + " not found");
         }
@@ -57,18 +52,18 @@ public class ValuesChecker {
         }
     }
 
-    private static void verifyPageValues(int currentPage, int pageSize) throws InvalidPageValuesException {
+    private static void verifyPageValues(int currentPage, int pageSize) throws InvalidPageValueException {
         if (currentPage < 0) {
             log.error("Current page can't be negative");
-            throw new InvalidPageValuesException("Current page can't be negative");
+            throw new InvalidPageValueException("Current page can't be negative");
         }
 
         if (pageSize < 0) {
             log.error("Page size can't be negative");
-            throw new InvalidPageValuesException("Page size can't be negative");
+            throw new InvalidPageValueException("Page size can't be negative");
         } else if (pageSize == 0) {
             log.error("Page size can't be zero");
-            throw new InvalidPageValuesException("Page size can't be zero");
+            throw new InvalidPageValueException("Page size can't be zero");
         }
     }
 }

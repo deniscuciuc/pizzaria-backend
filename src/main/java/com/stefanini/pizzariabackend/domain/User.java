@@ -119,4 +119,18 @@ public class User {
             name = "is_confirmed_by_email"
     )
     private boolean isConfirmedByEmail;
+
+    public User(Long id, String email, String nickname, String password, List<History> histories) {
+        this.id = id;
+        this.email = email;
+        this.nickname = nickname;
+        this.password = password;
+        this.history = histories;
+    }
+    public User(Long id, String email, String nickname, String password) {
+        this.id = id;
+        this.email = email;
+        this.nickname = nickname;
+        this.password = password;
+    }
 }

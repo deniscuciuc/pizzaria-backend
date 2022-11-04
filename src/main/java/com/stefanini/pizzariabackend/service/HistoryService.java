@@ -17,14 +17,14 @@ public interface HistoryService {
      * @param history to be saved
      * @return saved history
      */
-    History saveHistory(History history);
+    History createHistory(History history);
 
     /**
      * Finds all histories.
      *
      * @return all histories or empty list
      */
-    List<History> findAllHistories();
+    List<History> getAllHistories();
 
     List<History> getPaginatedHistories(Long userId, int currentPage, int pageSize);
 }

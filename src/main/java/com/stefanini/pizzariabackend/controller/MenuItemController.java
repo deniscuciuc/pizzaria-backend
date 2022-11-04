@@ -4,7 +4,7 @@ import com.stefanini.pizzariabackend.domain.MenuItem;
 import com.stefanini.pizzariabackend.service.MenuItemService;
 import com.stefanini.pizzariabackend.service.impl.MenuItemServiceImpl;
 import com.stefanini.pizzariabackend.service.impl.exception.InvalidIdException;
-import com.stefanini.pizzariabackend.service.impl.exception.InvalidPageValuesException;
+import com.stefanini.pizzariabackend.service.impl.exception.InvalidPageValueException;
 import com.stefanini.pizzariabackend.service.impl.exception.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +26,7 @@ public class MenuItemController {
     @PostMapping
     @ResponseStatus(CREATED)
     public MenuItem createMenuItem(@RequestBody MenuItem menuItem) {
-        return menuItemService.saveMenuItem(menuItem);
+        return menuItemService.createMenuItem(menuItem);
     }
 
     @PutMapping("/{id}")
@@ -51,7 +51,7 @@ public class MenuItemController {
 
     @GetMapping
     public List<MenuItem> getAllMenuItems() {
-        return menuItemService.findAllMenuItems();
+        return menuItemService.getAllMenuItems();
     }
 
     @DeleteMapping("/{id}")
@@ -82,7 +82,7 @@ public class MenuItemController {
             return ResponseEntity
                     .status(ACCEPTED)
                     .body(menuItemService.getPaginatedMenuItems(category, subcategory, currentPage, pageSize));
-        } catch (InvalidPageValuesException exception) {
+        } catch (InvalidPageValueException exception) {
             return ResponseEntity
                     .status(exception.getResponseStatus())
                     .body(exception.getMessage());

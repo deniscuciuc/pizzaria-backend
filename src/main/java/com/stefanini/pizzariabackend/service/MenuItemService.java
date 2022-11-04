@@ -17,7 +17,7 @@ public interface MenuItemService {
      * @param menuItem to be saved
      * @return saved menu item
      */
-    MenuItem saveMenuItem(MenuItem menuItem);
+    MenuItem createMenuItem(MenuItem menuItem);
 
     /**
      * Updates menu item.
@@ -33,7 +33,7 @@ public interface MenuItemService {
      *
      * @return all menu items or empty list
      */
-    List<MenuItem> findAllMenuItems();
+    List<MenuItem> getAllMenuItems();
 
     /**
      * Deletes menu item by its id.

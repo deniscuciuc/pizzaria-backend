@@ -25,7 +25,7 @@ public class MenuItemServiceImpl implements MenuItemService {
 
 
     @Override
-    public MenuItem saveMenuItem(MenuItem menuItem) {
+    public MenuItem createMenuItem(MenuItem menuItem) {
         return menuItemRepository.save(menuItem);
     }
 
@@ -39,7 +39,7 @@ public class MenuItemServiceImpl implements MenuItemService {
     }
 
     @Override
-    public List<MenuItem> findAllMenuItems() {
+    public List<MenuItem> getAllMenuItems() {
         return (List<MenuItem>) menuItemRepository.findAll();
     }
 

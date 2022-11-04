@@ -4,7 +4,7 @@ import com.stefanini.pizzariabackend.domain.Order;
 import com.stefanini.pizzariabackend.service.OrderService;
 import com.stefanini.pizzariabackend.service.impl.OrderServiceImpl;
 import com.stefanini.pizzariabackend.service.impl.exception.InvalidIdException;
-import com.stefanini.pizzariabackend.service.impl.exception.InvalidPageValuesException;
+import com.stefanini.pizzariabackend.service.impl.exception.InvalidPageValueException;
 import com.stefanini.pizzariabackend.service.impl.exception.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,7 +60,7 @@ public class OrderController {
             return ResponseEntity
                     .status(ACCEPTED)
                     .body(orderService.getPaginatedOrders(currentPage, pageSize));
-        } catch (InvalidPageValuesException exception) {
+        } catch (InvalidPageValueException exception) {
             return ResponseEntity
                     .status(exception.getResponseStatus())
                     .body(exception.getMessage());

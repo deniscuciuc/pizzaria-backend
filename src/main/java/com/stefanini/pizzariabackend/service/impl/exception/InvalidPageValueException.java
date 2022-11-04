@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @ResponseStatus(BAD_REQUEST)
-public class InvalidPageValuesException extends RuntimeException{
+public class InvalidPageValueException extends RuntimeException{
 
-    public InvalidPageValuesException(String message) {
+    public InvalidPageValueException(String message) {
         super(message);
     }
 

@@ -1,6 +1,7 @@
 package com.stefanini.pizzariabackend.service.impl;
 
 import com.stefanini.pizzariabackend.domain.History;
+import com.stefanini.pizzariabackend.domain.User;
 import com.stefanini.pizzariabackend.repo.HistoryRepository;
 import com.stefanini.pizzariabackend.repo.UserRepository;
 import com.stefanini.pizzariabackend.service.HistoryService;
@@ -28,32 +29,33 @@ public class HistoryServiceImpl implements HistoryService {
     }
 
     @Override
-    public History saveHistory(History history) {
+    public History createHistory(History history) {
         return historyRepository.save(history);
     }
 
     @Override
-    public List<History> findAllHistories() {
+    public List<History> getAllHistories() {
         return historyRepository.findAll();
     }
 
     @Override
     public List<History> getPaginatedHistories(Long userId, int currentPage, int pageSize) {
         ValuesChecker.verifyIdAndIfInvalidThrowException(userId);
-        verifyIfUserExistsById(userId);
+        User user = verifyIfUserExistsByIdAndIfTrueReturnHim(userId);
         ValuesChecker.verifyPaginatingValuesAndThrowExceptionIfInvalidValues(currentPage, pageSize);
 
         Pageable paging = PageRequest.of(currentPage, pageSize);
-        Page<History> pagedResult = historyRepository.findAll(paging);
 
-        return pagedResult.getContent();
+        return historyRepository.findHistoriesByUser(user, paging);
     }
 
-    private void verifyIfUserExistsById(Long id) throws NotFoundException {
+    private User verifyIfUserExistsByIdAndIfTrueReturnHim(Long id) throws NotFoundException {
         boolean doesUserExist = userRepository.existsById(id);
         if (!doesUserExist) {
             log.error("User with id {} not found", id);
             throw new NotFoundException("User with id " + id + " not found");
+        } else {
+            return userRepository.findById(id).get();
         }
     }
 }
