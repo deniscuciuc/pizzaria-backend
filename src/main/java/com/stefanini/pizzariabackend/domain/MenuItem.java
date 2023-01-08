@@ -34,34 +34,20 @@ public class MenuItem {
             strategy = SEQUENCE,
             generator = "menu_item_sequence"
     )
-    @Column(
-            name = "id",
-            nullable = false,
-            updatable = false
-    )
+    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-    @Column(
-            name = "name",
-            nullable = false
-    )
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Lob
-    @Column(
-            name = "image"
-    )
+    @Column(name = "image")
     private byte[] image;
 
-    @Column(
-            name = "ingredients",
-            nullable = false
-    )
+    @Column(name = "ingredients", nullable = false)
     private String ingredients;
 
-    @Column(
-            name = "sizes_and_prices"
-    )
+    @Column(name = "sizes_and_prices")
     @ElementCollection
     private Map<Size, Double> sizesAndPrices;
 
@@ -72,22 +58,16 @@ public class MenuItem {
     @Enumerated(EnumType.STRING)
     private Category category;
 
-    @Column(
-            name = "subcategory"
-    )
+    @Column(name = "subcategory")
     @Enumerated(EnumType.STRING)
     private Subcategory subcategory;
 
-    @Column(
-            name = "thickness"
-    )
+    @Column(name = "thickness")
     @Enumerated(EnumType.STRING)
     private Thickness thickness;
 
     @ManyToOne
-    @JoinColumn(
-            name = "order_id"
-    )
+    @JoinColumn(name = "order_id")
     private Order order;
 
     private MenuItem(String name, byte[] image, String ingredients,
@@ -218,8 +198,8 @@ public class MenuItem {
     }
 
     public static MenuItem createBeveragesWithDefaultCategory(String name, byte[] image, String ingredients,
-                                                            double smallSizePrice, double mediumSizePrice,
-                                                            double largeSizePrice, Subcategory subcategory) {
+                                                              double smallSizePrice, double mediumSizePrice,
+                                                              double largeSizePrice, Subcategory subcategory) {
         Map<Size, Double> sizesAndPrices = getMapOfSizesAndPricesByPricesForEachSize(
                 smallSizePrice, mediumSizePrice, largeSizePrice
         );
@@ -230,8 +210,8 @@ public class MenuItem {
     }
 
     public static MenuItem createSupplementsWithDefaultCategory(String name, byte[] image, String ingredients,
-                                                             double smallSizePrice, double mediumSizePrice,
-                                                             double largeSizePrice) {
+                                                                double smallSizePrice, double mediumSizePrice,
+                                                                double largeSizePrice) {
         Map<Size, Double> sizesAndPrices = getMapOfSizesAndPricesByPricesForEachSize(
                 smallSizePrice, mediumSizePrice, largeSizePrice
         );
